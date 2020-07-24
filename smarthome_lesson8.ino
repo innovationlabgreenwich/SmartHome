@@ -20,8 +20,8 @@ Servo myservo;//create servo object to control a servo
 SoftwareSerial softserial(A9, A8); // RX, TX
 //#endif
 
-char ssid[] = "NETGEAR00";            // your network SSID (name)
-char pass[] = "weijianweiye";        // your network password
+char ssid[] = "******";            // your network SSID (name)
+char pass[] = "******";        // your network password
 int status = WL_IDLE_STATUS;
 
 int ledStatus = LOW;
