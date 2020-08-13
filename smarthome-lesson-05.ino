@@ -24,8 +24,8 @@ DHT dht(DHTPIN, DHTTYPE);
 SoftwareSerial softserial(A9, A8); // RX, TX
 //#endif
 
-char ssid[] = "VALHALLA";            // your network SSID (name)
-char pass[] = "182461b17174CoNaN";        // your network password
+char ssid[] = "*******";            // your network SSID (name)
+char pass[] = "*******";        // your network password
 int status = WL_IDLE_STATUS;
 int reqCount = 0;                // number of requests received
 
