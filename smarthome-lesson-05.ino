@@ -1,28 +1,29 @@
 /*
  OSOYOO smarthome example: remote accsse dht11 data 
-
  A simple web server that shows the data of the DHT11 sensor via a web page using an ESP8266 module.
  This sketch will print the IP address of your ESP8266 module (once connected)
  to the Serial monitor. From there, you can open that address in a web browser
  to display the web page.
  The web page will be automatically refreshed each 20 seconds.
-
  For more details see: http://osoyoo.com/?p=28934
 */
 
 #include "WiFiEsp.h"
-#include "dht.h"
-dht DHT;
+#include "DHT.h"
+
 // if you require to change the pin number, Edit the pin with your arduino pin.
-#define DHT11_PIN 2
+//#define DHT11_PIN 2
+#define DHTPIN 2
+#define DHTTYPE DHT11 
+DHT dht(DHTPIN, DHTTYPE);
 // Emulate softserial on pins A9/A8 if not present
 //#ifndef HAVE_HWSERIAL1
 #include "SoftwareSerial.h"
 SoftwareSerial softserial(A9, A8); // RX, TX
 //#endif
 
-char ssid[] = "******";            // your network SSID (name)
-char pass[] = "******";        // your network password
+char ssid[] = "*****";            // your network SSID (name)
+char pass[] = "*****";        // your network password
 int status = WL_IDLE_STATUS;
 int reqCount = 0;                // number of requests received
 
@@ -73,14 +74,25 @@ void setup()
 void loop()
 {
   //get the dht11 data
-  int chk = DHT.read11(DHT11_PIN);
+  //int chk = DHT.read11(DHTPIN);
+  dht.begin();
+  float h = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float t = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float f = dht.readTemperature(false);
+    // Check if any reads failed and exit early (to try again).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
   Serial.print(" Humidity: " );
-  Serial.print(DHT.humidity, 1);
+  Serial.print(h);
   Serial.println('%');
-  Serial.print(" Temparature ");
-  Serial.print(DHT.temperature, 1);
+  Serial.print(" Temperature ");
+  Serial.print(t);
   Serial.println('C');
- // delay(2000);
+  delay(2000);
   // listen for incoming clients
   WiFiEspClient client = server.available();
   if (client) {
@@ -103,7 +115,7 @@ void loop()
             "HTTP/1.1 200 OK\r\n"
             "Content-Type: text/html\r\n"
             "Connection: close\r\n"  // the connection will be closed after completion of the response
-            "Refresh: 20\r\n"        // refresh the page automatically every 20 sec
+            "Refresh: 5\r\n"        // refresh the page automatically every 5 sec
             "\r\n");
           client.print("<!DOCTYPE HTML>\r\n");
           client.print("<html>\r\n");
@@ -112,11 +124,11 @@ void loop()
           client.print(++reqCount);
           client.print("<br>\r\n");
           client.print("Humidity:  ");
-          client.print(DHT.humidity, 1);
+          client.print(h);
           client.print('%');
           client.print("<br>\r\n");
           client.print("Temperature:  ");
-          client.print(DHT.temperature, 1);
+          client.print(t);
           client.print('C');
           client.print("<br>\r\n");
           client.print("</html>\r\n");
@@ -133,9 +145,9 @@ void loop()
       }
     }
     // give the web browser time to receive the data
-    delay(10);
+    delay(2000);
 
-    // close the connection:
+    //close the connection:
     client.stop();
     Serial.println("Client disconnected");
   }
