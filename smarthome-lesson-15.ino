@@ -20,8 +20,8 @@ SoftwareSerial softserial(A9, A8); // A9 to ESP_TX, A8 to ESP_RX by default
 #define Trig_PIN 25
 #define Echo_PIN 26
 
-char ssid[] = "TP-LINK_DAFD"; // replace ****** with your network SSID (name)
-char pass[] = "wjwyrsgj4903"; // replace ****** with your network password
+char ssid[] = "******"; // replace ****** with your network SSID (name)
+char pass[] = "******"; // replace ****** with your network password
 int status = WL_IDLE_STATUS;
 
 int distance = 0;
